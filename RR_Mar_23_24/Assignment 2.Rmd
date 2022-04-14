@@ -1,0 +1,48 @@
+---
+title: "Assignment 2 - Friends"
+author: "Daria Ivanushenko"
+date: "3/31/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+*Friends* is an American television sitcom created by *David Crane* and *Marta Kauffman*, which aired on NBC from September 22, 1994, to May 6, 2004, lasting ten seasons. With an ensemble cast starring *Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry* and *David Schwimmer*, the show revolves around six friends in their 20s and 30s who live in Manhattan, New York City. The series was produced by Bright/Kauffman/Crane Productions, in association with Warner Bros. Television. The original executive producers were *Kevin S. Bright, Kauffman,* and *Crane*.
+
+![Friends sitcome](C:\\Users\\daria\\OneDrive\\Desktop\\Reproducible Research\\RRcourse2022\\RR_Mar_23_24\\friends.jpg)
+
+## Statistics
+
+```{r}
+dataset = readxl::read_xlsx("data.xlsx", col_names = TRUE)
+colnames(dataset) = c("Season", "Year", "Viewers")
+
+summary(dataset)
+
+
+options(scipen = 999)
+library(ggplot2)
+library(dplyr)
+
+barplot(dataset$Viewers, 
+        xlab = "Season",
+        names.arg = dataset$Season,
+        ylab = "Viewers", 
+        main = "Viewers by Season")
+
+
+barplot(dataset$Viewers, 
+        xlab = "Season",
+        names.arg = dataset$Year,
+        ylab = "Viewers", 
+        main = "Viewers by Year", 
+        horiz = TRUE)
+
+
+
+```
+the viewership decreased by `insert_calculated_number` between seasons 3 and 5
