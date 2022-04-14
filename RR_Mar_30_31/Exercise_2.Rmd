@@ -1,16 +1,33 @@
 ---
 title: "Exercise 2"
-author: "Wojciech Hardy; Łukasz Nawaro"
+author: "Daria Ivanushenko"
 date: "3/29/2022"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
+params:
+  data: "season_1.RData"
+  filename: "season 1"
 ---
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-load("../Data/season_1.RData")
+
+
+setwd("C:/Users/daria/OneDrive/Desktop/Reproducible Research/RRcourse2022/RRcourse2022/Data")
+load(params$data)
+
+season_data$premiere_date
+
+library(stringr)
+library(dplyr)
+library(rmarkdown)
+
 ```
 
-# Game of Thrones - Season 1 summary in numbers
+# Game of Thrones - `r params$filename` summary in numbers
 
 ### __(*Warning:* spoilers ahead)__
 
@@ -24,13 +41,14 @@ Set on the fictional continents of Westeros and Essos, Game of Thrones has a lar
 
 ***
 
-### Season 1 summary
+### `r params$filename` summary
 
-Season 1 of Game of Thrones consisted of 10 episodes that aired between April 17 and June 19, 2011 on HBO. The show gathered an average of 2.515 first-day TV viewers in the US, with the number growing from 2.22 to 3.04 million by the end of the season.
+`r params$filename` of Game of Thrones consisted of `r nrow(season_data)` episodes that aired between `r word(season_data$premiere_date,1,sep = "\\(")[1]` and 
+`r params$filename` of Game of Thrones consisted of `r nrow(season_data)` episodes that aired between `r word(season_data$premiere_date,1,sep = "\\(")[nrow(season_data)]` on HBO. The show gathered an average of `r mean(season_data$viewers)` first-day TV viewers in the US, with the number growing from `r season_data %>% select(viewers) %>% arrange(viewers) %>% slice(1:1)` to `r season_data %>% select(viewers) %>% arrange(viewers) %>% slice(nrow(season_data):nrow(season_data))` million by the end of the season.
 
-The most popular episode of the season was "Fire and Blood", in which:
+The most popular episode of the season was `r season_data$description[season_data$viewers == max(season_data$viewers)]` , in which:
 
-> "The North secedes from the Seven Kingdoms and proclaims Robb as king. With Jaime as the Starks' prisoner and Robert's two brothers, Stannis and Renly, each challenging Joffrey's claim to the throne, Tywin appoints Tyrion as acting King's Hand, while Tywin fights to defend Joffrey's reign. Jon attempts to desert the Night's Watch to avenge Ned and join Robb, but his Night's Watch brothers convince him to honor his oath. Jon joins an expedition to search for Benjen Stark beyond the Wall. Yoren, a Night's Watch recruiter, smuggles Arya out of King's Landing disguised as a boy, while Joffrey intends to crown Sansa his queen, despite executing her father. Daenerys's baby is born deformed and dead, and Drogo is left in a vegetative state by the witch's treacherous magic. Daenerys compassionately ends Drogo's life. She places the three dragon eggs on Drogo's funeral pyre and sets it afire, also burning the witch alive. Ignoring Jorah's pleas, she walks into the flames. When the embers die the following morning, Daenerys is found in the ashes, unharmed, flanked by three newly-hatched baby dragons. Jorah and other witnesses kneel before her."
+`r season_data$title[season_data$viewers == max(season_data$viewers)]`
 
 ***
 
@@ -42,11 +60,25 @@ plot(season_data$viewers, type="l", col="red", lwd=5, xlab = "Episode number", y
 
 ***
 
+
 Finally, the episodes with the above-average viewership were:
 
-| No. in season | Title  | Directed by  |
-|:------        |:-----: |:------:      |
-| 5             | "The Wolf and the Lion"  | Brian Kirk      |
-| 8             | "The Pointy End" | Daniel Minahan      |
-| 9             | "Baelor" | Alan Taylor      |
-| 10            | "Fire and Blood" | Alan Taylor      |
+```{r}
+
+x = season_data[season_data$viewers > mean(season_data$viewers),]
+
+knitr::kable(select(x, no_season, title, directed_by), "pipe")
+
+
+```
+
+```{r}
+a1 = c("season_1.RData","season_2.RData", "season_3.RData","season_4.RData", "season_5.RData", "season_6.RData", "season_7.RData", "season_8.RData")
+a2 = c("season 1","season 2", "season 3","season 4", "season 5", "season 6", "season 7", "season 8")
+outputfile = c("season 1","season 2", "season 3","season 4", "season 5", "season 6", "season 7", "season 8")
+
+for(i in 1:length(a)){
+  rmarkdown::render("Exercise_2.Rmd", params = list(data = a1[i], filename = a2[i]), output_file = outputfile[i])
+}
+```
+
